@@ -1,0 +1,27 @@
+services:
+  web:
+    build: .
+    container_name: express_app
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - ./database:/app/database  # To persist the SQLite database
+    environment:
+      - SECRET_KEY=${SECRET_KEY}  # Pass secret key from environment variable
+    depends_on:
+      - db  # Ensure the database container is ready before the web app starts
+    networks:
+      - app-network
+
+  db:
+    image: nouchka/sqlite3:latest  # SQLite3 image (uses an SQLite containerized setup)
+    container_name: sqlite_db
+    volumes:
+      - ./database:/database  # Persist SQLite data
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

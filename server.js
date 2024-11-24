@@ -6,17 +6,11 @@ const session = require('express-session');
 const app = express();
 const port = 3000;
 
-// SQLite Database connection
 const db = new sqlite3.Database('./database/users.db');
 
-// Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
-require('dotenv').config();  // Ensure you load environment variables
-
-// Middleware
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
+require('dotenv').config();
 app.use(
     session({
         secret: process.env.SECRET_KEY,
@@ -34,7 +28,6 @@ app.post('/login', (req, res) => {
         }
 
         if (row) {
-            // Compare plain text password directly with the stored password
             if (password === row.password) {
                 req.session.userId = row.id;
                 req.session.username = row.username;
@@ -48,13 +41,11 @@ app.post('/login', (req, res) => {
     });
 });
 
-// Route: Logout
 app.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
 });
 
-// Start the server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
