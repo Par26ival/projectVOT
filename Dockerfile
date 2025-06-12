@@ -1,20 +1,25 @@
-# Use official Node.js image as a base
-FROM node:16
+FROM node:18
 
-# Set the working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy the package.json and package-lock.json
+# Install required dependencies
+RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
+
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
+# Rebuild sqlite3 with Python available
+RUN npm rebuild sqlite3 --build-from-source
+
+# Copy the rest of the application
 COPY . .
 
-# Expose the port that your application will run on
+# Expose the app's port
 EXPOSE 3000
 
-# Command to run the application
-CMD ["node", "server.js"]
+# Command to start the app
+CMD ["npm", "start"]
