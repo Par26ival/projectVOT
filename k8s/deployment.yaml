@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: express-app
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: express-app
+  template:
+    metadata:
+      labels:
+        app: express-app
+    spec:
+      containers:
+        - name: express-app
+          image: your-dockerhub-username/express-app:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: SECRET_KEY
+              value: "6fe8b6f123f6d8a948b243bacb929f834dceea95b8a513389b2c758f15fa0213"
+          volumeMounts:
+            - name: sqlite-data
+              mountPath: /app/database
+      volumes:
+        - name: sqlite-data
+          persistentVolumeClaim:
+            claimName: sqlite-pvc
