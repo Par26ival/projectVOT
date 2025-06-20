@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: express-app
-          image: your-dockerhub-username/express-app:latest
+          image: pederakis/express-app:latest
           ports:
             - containerPort: 3000
           env:
